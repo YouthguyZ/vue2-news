@@ -6,6 +6,8 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+// 全局引入样式
+import '@/assets/global.less'
 
 // 注册使用element
 Vue.use(ElementUI)

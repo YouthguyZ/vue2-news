@@ -1,11 +1,15 @@
 <template>
-    <router-view></router-view>
+<div>
+登录页
+</div>
 </template>
 
 <script>
 export default {
-
+  name: 'LoginInedx'
 }
 </script>
 
-<style lang="less"></style>
+<style>
+
+</style>
