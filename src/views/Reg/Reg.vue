@@ -25,6 +25,7 @@
 
 <script>
 export default {
+  // 关闭eslint报错
   // vue/multi-word-component-names
   name: 'Reg',
   data() {
@@ -83,6 +84,7 @@ export default {
         // 3.根据结果提示用户
         if (res.code === 1) this.$message.error(res.message)
         // 4.跳转登录页面
+        // 编程式导航this.$router.push('/path')
         this.$router.push('/login')
       })
     }
