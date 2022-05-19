@@ -122,7 +122,7 @@ export default {
     // 获取左侧菜单请求
     async getMenus() {
       const { data: res } = await this.$http.get('/my/menus')
-      console.log(res)
+      // console.log(res)
       this.menus = res.data
     }
   },

@@ -11,7 +11,7 @@
           <el-input v-model="loginForm.username" prefix-icon="el-icon-user" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item  prop="password">
-          <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model="loginForm.password" prefix-icon="el-icon-lock" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item >
           <el-button type="primary" style="width:100%" @click="hLogin">登录</el-button>
@@ -52,14 +52,23 @@ export default {
         if (!valid) return
         // 2.发起请求
         const { data: res } = await this.$http.post('/api/login', this.loginForm)
-        console.log(res)
+        // console.log(res)
         // 3.提示用户
-        if (res.code === 1) return this.$message.error(res.message)
-        this.$message.success(res.mesagge)
+        if (res.code !== 0) return this.$message.error(res.message)
+        this.$message.success(res.message)
+        // console.log(res)
         // 4.todo/跳转页面 存储token  token
         this.$store.commit('user/updateToken', res.token)
         // 5.跳转页面
-        this.$router.push('/')
+        await this.$router.push('/')
+        /* this.$http.post('/api/login', this.loginForm).then(
+          ({ data: res }) => {
+            if (res.code !== 0) return
+            this.$message.success(res.message)
+            this.$store.commit('user/updateToken', res.token)
+            this.$router.push('/')
+          }
+        ) */
       })
     }
   }

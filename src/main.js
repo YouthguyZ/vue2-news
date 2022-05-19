@@ -35,6 +35,28 @@ axios.interceptors.request.use(function(config) {
   return Promise.reject(error)
 })
 
+// 当 token 过期失效时身份认证也会失败 这是也要跳转到登录页 设置响应拦截器
+// 添加响应拦截器
+axios.interceptors.response.use(function(response) {
+  // 对响应数据做点什么
+  // console.log('响应数据')
+  return response
+}, function(error) {
+  // console.log('报错了')
+  // console.log(error)
+  // 对响应错误做点什么
+  if (error.response.status === 401) {
+    // 1.清空过期token
+    store.commit('user/updateToken', '')
+    // 2.跳转页面
+    router.push('/login')
+    // 3.提示用户token错误
+    Vue.prototype.$message.error(error.response.data.message)
+    // Vue.prototype.$message.error(error.message)
+  }
+  return Promise.reject(error)
+})
+
 Vue.config.productionTip = false
 
 new Vue({
