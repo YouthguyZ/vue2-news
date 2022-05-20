@@ -6,6 +6,7 @@ import Reg from '@/views/Reg/Reg'
 import Main from '@/views/Main/Main'
 import Home from '@/views/menus/Home/home.vue'
 import UserInfo from '@/views/menus/User/UserInfo'
+import UserAvatar from '@/views/menus/User/UserAvatar'
 // 引入store文件
 import store from '@/store'
 
@@ -18,7 +19,9 @@ const routes = [
     path: '/',
     component: Main,
     redirect: '/home',
-    children: [{ path: 'home', component: Home }, { path: 'user-info', component: UserInfo }]
+    children: [{ path: 'home', component: Home },
+      { path: 'user-info', component: UserInfo },
+      { path: 'user-avatar', component: UserAvatar }]
   }
 ]
 
