@@ -44,11 +44,15 @@
           @open="handleOpen"
           @close="handleClose"
           el-submenu 菜单项有子菜单项
+          index 菜单项唯一标识
           default-active 默认关联 index项使之选中高亮
           disabled 🈲用的
+          组件里提供 router方法 默认false 激活路由导航
+          router为ture ：router=‘true’
         -->
           <el-menu
-            default-active="/home"
+            router
+            :default-active="$route.path"
             class="el-menu-vertical-demo"
             background-color="#23262E"
             text-color="#fff"
@@ -82,7 +86,7 @@
       <el-container>
         <!-- 页面主体区域 -->
         <el-main>
-          Main.vue后台主页
+         <router-view></router-view>
         </el-main>
         <!-- 底部 footer 区域 -->
         <el-footer>© www.itheima.com - 黑马程序员</el-footer>

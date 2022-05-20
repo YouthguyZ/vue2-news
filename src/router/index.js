@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import Login from '@/views/Login/Login'
 import Reg from '@/views/Reg/Reg'
 import Main from '@/views/Main/Main'
+import Home from '@/views/menus/Home/home.vue'
+import UserInfo from '@/views/menus/User/UserInfo'
 // 引入store文件
 import store from '@/store'
 
@@ -12,7 +14,12 @@ Vue.use(VueRouter)
 const routes = [
   { path: '/login', component: Login },
   { path: '/reg', component: Reg },
-  { path: '/', component: Main }
+  {
+    path: '/',
+    component: Main,
+    redirect: '/home',
+    children: [{ path: 'home', component: Home }, { path: 'user-info', component: UserInfo }]
+  }
 ]
 
 const router = new VueRouter({
