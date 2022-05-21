@@ -27,8 +27,11 @@
         </el-table-column>
         <el-table-column
           label="操作">
-          <el-button size="mini" type="primary">修改</el-button>
-          <el-button size="mini" type="danger">删除</el-button>
+            <!-- 使用作用域插槽的方法将数据渲染到表格 -->
+          <template v-slot="scope">
+          <el-button size="mini" type="primary" @click="showeditVisible(scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="hDel(scope.row.id)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
@@ -53,6 +56,28 @@
         <el-button size="mini" type="primary" @click="addcatelist">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 修改文章 -->
+    <el-dialog
+      title="修改文章分类"
+      :close-on-click-modal='false'
+      @closed='$refs.editForm.resetFields()'
+      :visible.sync="editVisible"
+      width="35%">
+      <!-- 添加的表单 -->
+        <el-form :model="editForm" :rules="addRules" ref="editForm" label-width="70px">
+          <el-form-item label="分类名称" prop="cate_name">
+            <el-input v-model="editForm.cate_name" minlength="1" maxlength="10"></el-input>
+          </el-form-item>
+          <el-form-item label="分类别名" prop="cate_alias">
+            <el-input v-model="editForm.cate_alias" minlength="1" maxlength="15"></el-input>
+          </el-form-item>
+        </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="editVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="editcatelist">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -65,8 +90,13 @@ export default {
       catelist: [],
       // 默认隐藏弹出框
       addVisible: false,
+      editVisible: false,
       // 添加表单的数据对象
       addForm: {
+        cate_name: '',
+        cate_alias: ''
+      },
+      editForm: {
         cate_name: '',
         cate_alias: ''
       },
@@ -106,6 +136,37 @@ export default {
         this.addVisible = false
         this.initCateList()
       })
+    },
+    showeditVisible(row) {
+      // 深拷贝数据显示到表单行上
+      if (row.id === 1 || row.id === 2) return this.$message.error('宁配吗？？？')
+      this.editForm = { ...row }
+      this.editVisible = true
+    },
+    editcatelist() {
+      // 0.绑定事件
+      // 1.兜底校验
+      this.$refs.editForm.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.put('/my/cate/info', this.editForm)
+        if (res.code !== 0) return this.$message.error(res.message)
+        this.$message.success(res.message)
+        this.editVisible = false
+        this.initCateList()
+      })
+    },
+    hDel(id) {
+      if (id === 1 || id === 2) return this.$message.warning('胆儿挺肥啊，这都敢删')
+      // $confirm elementui 组件方法
+      this.$confirm('确定要删除吗', '提示', { type: 'warning' })
+        .then(async() => {
+          // 携带的请求参数 delete get params参数
+          const { data: res } = await this.$http.delete('/my/cate/del', { params: { id } })
+          if (res.code !== 0) return this.$message.error(res.message)
+          this.$message.success(res.message)
+          this.initCateList()
+        })
+        .catch(() => {})
     }
   }
 }

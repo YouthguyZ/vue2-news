@@ -49,6 +49,7 @@
           disabled 🈲用的
           组件里提供 router方法 默认false 激活路由导航
           router为ture ：router=‘true’
+          :default-active="$route.path" 动态高亮 当路径到哪里 哪里就高亮
         -->
           <el-menu
             router

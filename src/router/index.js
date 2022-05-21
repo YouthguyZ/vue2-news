@@ -9,6 +9,7 @@ import UserInfo from '@/views/menus/User/UserInfo'
 import UserAvatar from '@/views/menus/User/UserAvatar'
 import UserPwd from '@/views/menus/User/UserPwd'
 import ArtCate from '@/views/menus/Article/ArtCate'
+import ArtList from '@/views/menus/Article/ArtList'
 // 引入store文件
 import store from '@/store'
 
@@ -25,7 +26,8 @@ const routes = [
       { path: 'user-info', component: UserInfo },
       { path: 'user-avatar', component: UserAvatar },
       { path: 'user-pwd', component: UserPwd },
-      { path: 'Art-Cate', component: ArtCate }
+      { path: 'art-cate', component: ArtCate },
+      { path: 'art-list', component: ArtList }
     ]
   }
 ]
