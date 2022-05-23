@@ -9,8 +9,8 @@
         <el-form :inline="true" :model="q">
           <el-form-item label="文章分类">
             <el-select v-model="q.cate_id" placeholder="请选择分类" size="small">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option :label="item.cate_name" :value="item.id" v-for="item in catelist" :key="item.id"></el-option>
+
             </el-select>
           </el-form-item>
           <el-form-item label="发布状态" style="margin-left: 15px;">
@@ -20,8 +20,8 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small">筛选</el-button>
-            <el-button type="info" size="small">重置</el-button>
+            <el-button type="primary" size="small" @click="initArtList">筛选</el-button>
+            <el-button type="info" size="small" @click="resetForm">重置</el-button>
           </el-form-item>
         </el-form>
         <!-- 发表文章的按钮 -->
@@ -35,11 +35,14 @@
             :data="artList"
             style="width: 100%">
             <el-table-column
-              prop="cate_name"
+              prop="title"
               label="文章标题">
+              <template v-slot="scope">
+               <el-link type="primary" @click="showdetail(scope.row.id)"> {{scope.row.title}}</el-link>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="title"
+              prop="cate_name"
               label="文章分类">
             </el-table-column>
             <el-table-column
@@ -145,7 +148,8 @@ export default {
       preview: '',
       artList: [],
       currentPage4: 1,
-      total: 0
+      total: 0,
+      artDetail: {}
     }
   },
   methods: {
@@ -208,9 +212,28 @@ export default {
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`)
+      this.q.pagesize = val
+      this.q.pagenum = 1
+      this.initArtList()
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
+      this.q.pagenum = val
+      this.initArtList()
+    },
+    resetForm() {
+      this.q = {
+        pagenum: 1,
+        pagesize: 2,
+        cate_id: '',
+        state: ''
+      }
+      this.initArtList()
+    },
+    async showdetail(id) {
+      const { data: res } = await this.$http.get('/my/article/info', { params: { id } })
+      if (res.code !== 0) return
+      this.artDetail = res.data
     }
   },
   created() {
