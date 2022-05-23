@@ -57,7 +57,10 @@
             </el-table-column>
              <el-table-column
               label="操作">
-              <el-button type="danger" size="mini">删除</el-button>
+              <!--column方法 作用域插槽 向函数传值id -->
+              <template v-slot="{row}">
+              <el-button type="danger" size="mini" @click="removeDetail(row.id)">删除</el-button>
+              </template>
             </el-table-column>
           </el-table>
       <!-- 分页区域 -->
@@ -108,7 +111,27 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 展示详情页 -->
+    <el-dialog
+      title="文章预览"
+      :visible.sync="detailVisible"
+      width="70%">
+       <h1 class="title">{{ artDetail.title }}</h1>
 
+        <div class="info">
+          <span>作者：{{ artDetail.nickname || artDetail.username }}</span>
+          <span>发布时间：{{ formatDate(artDetail.pub_date)  }}</span>
+          <span>所属分类：{{ artDetail.cate_name }}</span>
+          <span>状态：{{ artDetail.state }}</span>
+        </div>
+
+  <!-- 分割线 -->
+  <el-divider></el-divider>
+
+  <img :src="'http://www.liulongbin.top:3008' + artDetail.cover_img" alt="" />
+
+  <div v-html="artDetail.content"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -149,7 +172,8 @@ export default {
       artList: [],
       currentPage4: 1,
       total: 0,
-      artDetail: {}
+      artDetail: {},
+      detailVisible: false
     }
   },
   methods: {
@@ -199,6 +223,7 @@ export default {
         // 清空表单信息
         this.$refs.iptFile = ''
         this.$refs.pubForm.resetFields()
+        this.initArtList()
         this.preview = ''
       })
     },
@@ -234,6 +259,20 @@ export default {
       const { data: res } = await this.$http.get('/my/article/info', { params: { id } })
       if (res.code !== 0) return
       this.artDetail = res.data
+      this.detailVisible = true
+    },
+    removeDetail(id) {
+      this.$confirm('确认删除文章吗？？', '提示', { type: 'warning' })
+        .then(async() => {
+          const { data: res } = await this.$http.delete('/my/article/info', { params: { id } })
+          // 提示用户信息
+          if (res.code !== 0) return this.$message.error(res.message)
+          this.$message.success(res.message)
+          // 更新数据渲染页面
+          this.initArtList()
+        })
+        .catch(() => {
+        })
     }
   },
   created() {
@@ -262,5 +301,19 @@ export default {
   width: 400px;
   height: 280px;
   object-fit: cover;
+}
+.title {
+  font-size: 24px;
+  text-align: center;
+  font-weight: normal;
+  color: #000;
+  margin: 0 0 10px 0;
+}
+
+.info {
+  font-size: 12px;
+  span {
+    margin-right: 20px;
+  }
 }
 </style>
