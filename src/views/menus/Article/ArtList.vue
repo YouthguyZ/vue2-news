@@ -58,6 +58,15 @@
             </el-table-column>
           </el-table>
       <!-- 分页区域 -->
+       <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="q.pagenum"
+        :page-sizes="[2, 3, 5, 20]"
+        :page-size="q.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </el-card>
 
     <el-dialog
@@ -109,7 +118,7 @@ export default {
       // 查询参数对象
       q: {
         pagenum: 1,
-        pagesize: 5,
+        pagesize: 2,
         cate_id: '',
         state: ''
       },
@@ -134,7 +143,9 @@ export default {
       },
       catelist: [],
       preview: '',
-      artList: []
+      artList: [],
+      currentPage4: 1,
+      total: 0
     }
   },
   methods: {
@@ -182,6 +193,7 @@ export default {
         // 关闭dialog
         this.pubVisible = false
         // 清空表单信息
+        this.$refs.iptFile = ''
         this.$refs.pubForm.resetFields()
         this.preview = ''
       })
@@ -189,9 +201,16 @@ export default {
     async initArtList() {
       const { data: res } = await this.$http.get('/my/article/list', { params: this.q })
       this.artList = res.data
+      this.total = res.total
     },
     formatDate(data) {
       return dayjs(data).format('YYYY-MM-DD HH:mm-ss')
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`)
     }
   },
   created() {
