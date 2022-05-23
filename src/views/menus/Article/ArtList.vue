@@ -268,6 +268,10 @@ export default {
           // 提示用户信息
           if (res.code !== 0) return this.$message.error(res.message)
           this.$message.success(res.message)
+          // 解决bug 优化文章列删除
+          if (this.artList.length === 1 && this.q.pagenum > 1) {
+            this.q.pagenum--
+          }
           // 更新数据渲染页面
           this.initArtList()
         })
