@@ -221,7 +221,7 @@ export default {
         // 关闭dialog
         this.pubVisible = false
         // 清空表单信息
-        this.$refs.iptFile = ''
+        this.$refs.iptFile.value = ''
         this.$refs.pubForm.resetFields()
         this.initArtList()
         this.preview = ''
