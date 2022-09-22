@@ -90,7 +90,7 @@
          <router-view></router-view>
         </el-main>
         <!-- 底部 footer 区域 -->
-        <el-footer>© www.itheima.com - 黑马程序员</el-footer>
+        <el-footer><a href="https://github.com/YouthguyZ">© https://github.com/YouthguyZ</a></el-footer>
       </el-container>
     </el-container>
   </el-container>
